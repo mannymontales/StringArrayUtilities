@@ -106,42 +106,37 @@ a character array all at once !!! The solution to this was first doing it in sma
         }
         return false;
         */
-        //turn string array into char array
+        //alphabet arraylist to compare original array
         Character[] alphabet1 = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
         ArrayList<Character> alphabet = new ArrayList<>(Arrays.asList(alphabet1));
 
+        //turn string array into char array by first getting a new string with all the values
         String completeString = "";
         for (int i = 0; i < array.length; i++){
-            completeString += array[i];
+            completeString += array[i].toLowerCase();
         }
+        //make sure to remove the whitespace and assign into new char array
         completeString = completeString.replace(" ","");
+        char[] converted = completeString.toCharArray();
+        System.out.println(converted);
 
-        char[] converted = completeString.toLowerCase().toCharArray();
-        System.out.println(Arrays.toString(converted));
 
-//        for (int i = 0; i < converted.length - 1; i++) {
-//            if (alphabet.contains(Character.toLowerCase(converted[i]))) {
-//                alphabet.remove(Character.toLowerCase(converted[i]));
-//            }
-//        }
-
-        for (int i = 0; i < converted.length; i++) {
-            if (alphabet.contains(Character.toLowerCase(converted[i]))) {
-                alphabet.remove(Character.toLowerCase(converted[i]));
+        for (int i = 0; i < converted.length; i++){
+            if (alphabet.contains(converted[i])){
+                //alphabet.remove(converted[i] did not work because of this via chatgpt:
+                /*
+               alphabet.remove(converted[i]) uses the primitive char type directly as the argument for removal.
+               This relies on autoboxing, which automatically converts the primitive char to its corresponding wrapper class Character.
+               On the other hand, alphabet.remove(Character.valueOf(converted[i])) explicitly creates a Character object using the valueOf() method and passes it as an argument to the remove() method.
+               This ensures that the removal is performed based on the Character object.
+                 */
+                alphabet.remove(Character.valueOf(converted[i]));
             }
         }
-
-
+        //if the alphabet arraylist is empty return the result
         return alphabet.isEmpty();
     }
     //https://chat.openai.com/share/1b45b519-e161-432c-a8af-1d85546dd7da
-
-        /*
-        for (int i = 0; i < alphabet.size(); i++){
-            alphabet.remove(convertedArr[i]);
-        }*/
-
-        // If all letters have been removed from the alphabet list, it is pangramic
 
 
     /**
@@ -214,7 +209,61 @@ a character array all at once !!! The solution to this was first doing it in sma
      * @return array of Strings with each consecutive duplicate occurrence concatenated as a single string in an array of Strings
      */ // TODO
     public static String[] packConsecutiveDuplicates(String[] array) {
-        return null;
+        //use arraylist for dynamic size
+        ArrayList<String> dupRemoved = new ArrayList<>();
+
+        //traverse through original array
+
+        //     String[] array = {"a", "a", "a", "b", "c", "c", "a", "a", "d"};
+        //        String[] expected = {"aaa", "b", "cc", "aa", "d"};
+
+        //        String[] array = {"t", "t", "q", "a", "a", "a", "b", "c", "c", "a", "a", "d", "e", "e", "e"};
+        //        String[] expected = {"tt", "q", "aaa", "b", "cc", "aa", "d", "eee"};
+
+        int counter = 0;
+        for (counter = 0; counter < array.length - 2; counter++) {
+
+            String temp = ""; //temporary string to store consecutive letters to add to arraylist, gets cleared everytime after appending the consecutive letters for a new set of letters
+
+            //function to concatenate the array elements into temporary string
+            while (array[counter].equals(array[counter + 1])) {
+                temp += array[counter];//adds the current element to temp if the element next to it is the same
+
+                if (counter != array.length - 2){
+                    counter++;
+                } else {
+                    break;
+                }
+
+                /*
+                if(counter == array.length -1){
+                    temp += array[counter];
+                    dupRemoved.add(temp);
+                    System.out.println(temp);
+                    break;
+                }*/
+            }
+            temp += array[counter];//adds the last current element that was consecutive to the previous characters since the element next to it is going to be a different character
+            dupRemoved.add(temp);//add the concatenated temporary string into the arraylist
+            //System.out.println(temp);
+            //then concatenate into single string
+        }
+
+        if ((array[counter] != array[counter - 1]) && (array[counter - 1] != array[counter - 2])){
+            dupRemoved.add(array[counter]);
+            dupRemoved.add(array[array.length -1]);//adds the last element of the array does not work currently with second test case
+        }
+        else if ((array[counter - 1] == array[counter - 2]) && (array[counter] != array[counter - 1])){
+            dupRemoved.add(array[array.length -1]);
+        }
+
+        //System.out.println(array[array.length- 1]);
+
+
+        //create newarray with size of arraylist and assign the values of arraylist to new array
+        String[] newarray = new String[dupRemoved.size()];
+        newarray = dupRemoved.toArray(newarray);
+        return newarray;
     }
 
 
