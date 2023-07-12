@@ -197,6 +197,7 @@ a character array all at once !!! The solution to this was first doing it in sma
         //this line of code adds the last element of the original array after exiting the for loop
         //this is because if I tried to use "i <array.length" it would go out of bounds when comparing "array[i + 1];
         //but if i use array.length - 1 it would not append the last element into the array list this is what this code is for
+        //You don't need to check the last letter because you already did that in the previous iteration of the loop
         dupRemoved.add(array[array.length - 1]);
 
         String[] newarray = new String[dupRemoved.size()];
